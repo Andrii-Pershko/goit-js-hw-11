@@ -21,19 +21,15 @@ function onCliclBtn(e) {
   e.preventDefault();
   refs.galery.innerHTML = '';
   refs.page = 1;
-
   getData()
-
-
 }
 
 function loadMoreImg() {
   refs.page += 1;
   getData();
-
 }
 
-function getData() {
+async function getData() {
   const { input, API_KEY, URL, page } = refs;
 
   const params = new URLSearchParams({
@@ -47,20 +43,24 @@ function getData() {
   });
 
 
-  axios.get(`${URL}?${params}`).then(response => {
-    refs.loadMore.style.display = 'block';
+  const response = await axios.get(`${URL}?${params}`).then(response => {
+
     if (response.data.total === 0) {
       Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+      refs.loadMore.style.display = 'none';
       return
     }
+    refs.loadMore.style.display = 'block';
     if (response.data.hits.length < 40) {
       Notify.failure("We're sorry, but you've reached the end of search results.")
       refs.loadMore.style.display = 'none';
     }
     if (refs.input.value === '') {
       Notify.failure("You have not entered anything ");
+      refs.loadMore.style.display = 'none';
       return
     }
+
     console.log(response.data.hits)
     markUpImg(response.data.hits);
 
@@ -92,7 +92,6 @@ function markUpImg(arryImg) {
           <p class="info-item">
             <b>Downloads </b>
             <span>${downloads}</span>
-            
           </p>
         </div>
       </div>`
