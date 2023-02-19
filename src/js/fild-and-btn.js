@@ -43,29 +43,25 @@ async function getData() {
   });
 
 
-  const response = await axios.get(`${URL}?${params}`).then(response => {
+  const response = await axios.get(`${URL}?${params}`)
 
-    if (response.data.total === 0) {
-      Notify.failure("Sorry, there are no images matching your search query. Please try again.");
-      refs.loadMore.style.display = 'none';
-      return
-    }
-    refs.loadMore.style.display = 'block';
-    if (response.data.hits.length < 40) {
-      Notify.failure("We're sorry, but you've reached the end of search results.")
-      refs.loadMore.style.display = 'none';
-    }
-    if (refs.input.value === '') {
-      Notify.failure("You have not entered anything ");
-      refs.loadMore.style.display = 'none';
-      return
-    }
-
-    console.log(response.data.hits)
-    markUpImg(response.data.hits);
-
+  if (response.data.total === 0) {
+    Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+    refs.loadMore.style.display = 'none';
+    return
   }
-  )
+  refs.loadMore.style.display = 'block';
+  if (response.data.hits.length < 40) {
+    Notify.failure("We're sorry, but you've reached the end of search results.")
+    refs.loadMore.style.display = 'none';
+  }
+  if (refs.input.value === '') {
+    Notify.failure("You have not entered anything ");
+    refs.loadMore.style.display = 'none';
+    return
+  }
+
+  markUpImg(response.data.hits);
 }
 
 
