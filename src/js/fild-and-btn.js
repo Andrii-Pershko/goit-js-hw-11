@@ -1,5 +1,8 @@
 import axios from 'axios';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import SimpleLightbox from "simplelightbox";
+
+
 
 const refs = {
   form: document.querySelector('.search'),
@@ -60,6 +63,9 @@ async function getData() {
     refs.loadMore.style.display = 'none';
     return
   }
+  if (refs.page < 2) {
+    Notify.success(`Hooray! We found ${response.data.totalHits} images.`)
+  }
 
   markUpImg(response.data.hits);
 }
@@ -70,7 +76,7 @@ function markUpImg(arryImg) {
     const { webformatURL, largeImageURL, tags, likes, views, comments, downloads } = el;
     return `
         <div class="photo-card">
-        <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+        <a href="${largeImageURL}"> <img src="${webformatURL}" alt="${tags}" loading="lazy" /> </a>
         <div class="info">
           <p class="info-item">
             <b>Likes </b>
@@ -94,3 +100,5 @@ function markUpImg(arryImg) {
   }).join(" ");
   refs.galery.insertAdjacentHTML("beforeend", markUp);
 }
+
+var lightbox = new SimpleLightbox('.gallery > .photo-card a', { captionDelay: 250 });
